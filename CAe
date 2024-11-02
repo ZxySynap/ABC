@@ -1,0 +1,227 @@
+local Library = loadstring(Game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wizard"))()
+local Window = Library:NewWindow("Fisch")
+local Section = Window:NewSection("Casting Options")
+local player = game:GetService("Players").LocalPlayer
+local runService = game:GetService("RunService")
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Auto Click SHAKE button using VirtualInputManager
+local GuiService = game:GetService("GuiService")
+local virtualInput = game:GetService("VirtualInputManager")
+local isAutoClicking = false
+
+local function click_this_gui(to_click: GuiObject, offsetX, offsetY)
+    if not iswindowactive() then
+        repeat task.wait() until iswindowactive()
+    end
+
+    local inset = GuiService:GetGuiInset()
+    local absoluteSize = to_click.AbsoluteSize
+    local offset = {
+        x = absoluteSize.X / 2,
+        y = absoluteSize.Y / 2
+    }
+
+    local x = to_click.AbsolutePosition.X + offset.x + offsetX
+    local y = to_click.AbsolutePosition.Y + offset.y + offsetY
+
+    virtualInput:SendMouseButtonEvent(x + inset.X, y + inset.Y, 0, true, game, 0)
+    virtualInput:SendMouseButtonEvent(x + inset.X, y + inset.Y, 0, false, game, 0)
+end
+
+local function autoClick()
+    local shakeUI = playerGui:FindFirstChild("shakeui")
+    
+    if not shakeUI then
+        return
+    end
+
+    local button = shakeUI.safezone and shakeUI.safezone:FindFirstChild("button")
+    
+    if not button then
+        return
+    end
+  
+    if button and button:IsA("ImageButton") and isAutoClicking then
+        local offsetX = 5  
+        local offsetY = 0  
+        click_this_gui(button, offsetX, offsetY)
+    end
+end
+
+-- Auto Shake Toggle
+Section:CreateToggle("Auto Shake", function(value)
+    isAutoClicking = value
+    if value then
+        coroutine.wrap(function()
+            while isAutoClicking do
+                autoClick()
+                task.wait()
+            end
+        end)()
+    end
+end)
+
+-- Auto Catch Toggle
+local isAutoCatch = false
+Section:CreateToggle("Instant Perfect Catch", function(value)
+    isAutoCatch = value
+    print("Auto Catch:", value) -- Debug print for Auto Catch
+end)
+
+local function startCatching()
+    local reelBar = playerGui:FindFirstChild("reel") and playerGui.reel:FindFirstChild("bar")
+    if reelBar == nil then
+        return
+    end
+    if reelBar and isAutoCatch then
+        game:GetService("ReplicatedStorage").events.reelfinished:FireServer(100, true)
+    end
+end
+
+runService.RenderStepped:Connect(startCatching)
+
+-- Auto Cast Toggle
+local isAutoCasting = false 
+local bodyPosition
+
+local function isRodEquipped()
+    return player.Character and player.Character:FindFirstChildWhichIsA("Tool") and player.Character:FindFirstChildWhichIsA("Tool").Name:lower():find("rod")
+end
+
+local function equipRod()
+    for _, tool in ipairs(player.Backpack:GetChildren()) do
+        if tool:IsA("Tool") and tool.Name:lower():find("rod") then
+            player.Character.Humanoid:EquipTool(tool)
+            return tool
+        end
+    end
+end
+
+local function reelCasting()
+    if not isAutoCasting then
+        if bodyPosition then
+            bodyPosition:Destroy()
+            bodyPosition = nil
+        end
+        return
+    end
+
+    -- Center the shake button
+    local function centerButton()
+        local shakeUI = playerGui:FindFirstChild("shakeui")
+        if not shakeUI then return end
+
+        local button = shakeUI.safezone and shakeUI.safezone:FindFirstChild("button")
+        if button and button:IsA("ImageButton") then
+            button.AnchorPoint = Vector2.new(0.5, 0.5)
+            button.Position = UDim2.new(0.5, 0, 0.5, 0)
+            button.Size = UDim2.new(0, 100, 0, 100)
+        end
+    end
+
+    centerButton()
+
+    local character = player.Character or player.CharacterAdded:Wait()
+    local rootPart = character:WaitForChild("HumanoidRootPart")
+
+    if not bodyPosition then
+        local lockedPosition = rootPart.Position
+        bodyPosition = Instance.new("BodyPosition")
+        bodyPosition.Position = lockedPosition
+        bodyPosition.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+        bodyPosition.D = 1000
+        bodyPosition.P = 10000
+        bodyPosition.Parent = rootPart
+    end
+
+    local equippedTool = isRodEquipped() and player.Character:FindFirstChildWhichIsA("Tool") or equipRod()
+
+    if equippedTool then
+        local castEvent = equippedTool:FindFirstChild("events") and equippedTool.events:FindFirstChild("cast")
+        local resetEvent = equippedTool:FindFirstChild("events") and equippedTool.events:FindFirstChild("reset")
+        if castEvent then
+            castEvent:FireServer(100, 1)
+        elseif resetEvent then
+            resetEvent:FireServer()
+        end
+    end
+end
+
+Section:CreateToggle("Auto Reel Cast", function(value)
+    isAutoCasting = value
+    print("Auto Casting:", value) -- Debug print for Auto Casting
+end)
+
+runService.RenderStepped:Connect(reelCasting)
+
+-- Auto Center SHAKE button
+local isAutoShake = false
+Section:CreateToggle("Always Center Shake", function(value)
+    isAutoShake = value
+end)
+
+local function centerButton()
+    local shakeUI = playerGui:FindFirstChild("shakeui")
+    
+    if not shakeUI then
+        return
+    end
+
+    local button = shakeUI.safezone and shakeUI.safezone:FindFirstChild("button")
+    
+    if not button then
+        return
+    end
+
+    if isAutoShake then
+        if button:IsA("ImageButton") then
+            button.AnchorPoint = Vector2.new(0.5, 0.5)
+            button.Position = UDim2.new(0.5, 0, 0.5, 0)
+            button.Size = UDim2.new(0, 100, 0, 100)
+        end
+    end
+end
+
+runService.RenderStepped:Connect(centerButton)
+
+-- Event Notifiers
+local EventsSection = Tabs.Fish:AddSection("Notifier")
+local notified = false
+
+Section:CreateToggle("Frightful Pool Notifier", function(value)
+    if value then
+        game:GetService("RunService").Heartbeat:Connect(function()
+            if ToggleEventPool.Value then
+                local FischFrightExists = workspace.zones.fishing:FindFirstChild("FischFright24")
+                if FischFrightExists and not notified then
+                    SendNotif("Event", "Frightful Pool has appeared!! Hurry!!", 10)
+                    notified = true
+                elseif not FischFrightExists then
+                    notified = false
+                end
+            end
+        end)
+    else
+        notified = false
+    end
+end)
+
+local Mnotified = false
+Section:CreateToggle("Travelling Merchant Notifier", function(value)
+    if value then
+        game:GetService("RunService").Heartbeat:Connect(function()
+            if ToggleMerchant.Value then
+                local MerchantBoat = workspace.zones.fishing:FindFirstChild("FischFright24")
+                if MerchantBoat and not Mnotified then
+                    SendNotif("Merchant Spawned", "Travelling Merchant has appeared!! Hurry!!", 10)
+                    Mnotified = true
+                elseif not MerchantBoat then
+                    Mnotified = false
+                end
+            end
+        end)
+    else
+        Mnotified = false
+    end
+end)
