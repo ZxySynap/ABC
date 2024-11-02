@@ -7,7 +7,7 @@ local playerGui = player:WaitForChild("PlayerGui")
 local GuiService = game:GetService("GuiService")
 local virtualInput = game:GetService("VirtualInputManager")
 local isAutoClicking = false
---[[
+
 local function click_this_gui(to_click: GuiObject, offsetX, offsetY)
     if not iswindowactive() then
         repeat task.wait() until iswindowactive()
@@ -25,9 +25,9 @@ local function click_this_gui(to_click: GuiObject, offsetX, offsetY)
     virtualInput:SendMouseButtonEvent(x + inset.X, y + inset.Y, 0, true, game, 0)
     virtualInput:SendMouseButtonEvent(x + inset.X, y + inset.Y, 0, false, game, 0)
 end
-]]
+
 local function autoClick()
-   --[[ local shakeUI = playerGui:FindFirstChild("shakeui")
+    local shakeUI = playerGui:FindFirstChild("shakeui")
     
     if not shakeUI then
         return
@@ -38,9 +38,9 @@ local function autoClick()
     if not button then
         return
     end
-  ]]
+
     if button and button:IsA("ImageButton") and isAutoClicking then
-        --[[local offsetX = 5  
+        local offsetX = 5  
         local offsetY = 0  
         click_this_gui(button, offsetX, offsetY)]]
     end
@@ -51,11 +51,7 @@ Section:CreateToggle("Auto Shake(Fast)new!!", function(value)
     if value then
         coroutine.wrap(function()
             while isAutoClicking do
-                local GuiService = game:GetService('GuiService')
-                local button = game:GetService("Players").LocalPlayer.PlayerGui.shakeui.safezone:FindFirstChild("button")
-                GuiService.SelectedObject = button
-                virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
-                virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+                autoClick()
                 task.wait()
             end
         end)()
