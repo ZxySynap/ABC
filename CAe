@@ -43,11 +43,6 @@ local function autoClick()
         --[[local offsetX = 5  
         local offsetY = 0  
         click_this_gui(button, offsetX, offsetY)]]
-        local GuiService = game:GetService('GuiService')
-        local button = game:GetService("Players").LocalPlayer.PlayerGui.shakeui.safezone:FindFirstChild("button")
-        GuiService.SelectedObject = button
-        virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
-        virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
     end
 end
 
@@ -56,7 +51,11 @@ Section:CreateToggle("Auto Shake(Fast)", function(value)
     if value then
         coroutine.wrap(function()
             while isAutoClicking do
-                autoClick()
+                local GuiService = game:GetService('GuiService')
+                local button = game:GetService("Players").LocalPlayer.PlayerGui.shakeui.safezone:FindFirstChild("button")
+                GuiService.SelectedObject = button
+                virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+                virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
                 task.wait()
             end
         end)()
