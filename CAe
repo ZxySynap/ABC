@@ -41,7 +41,7 @@ local function autoClick()
     end
 end
 
-Section:CreateToggle("Auto Shake(Random Click)", function(value)
+Section:CreateToggle("Auto Shake(Bad but fast)", function(value)
     isAutoClicking = value
     if value then
         coroutine.wrap(function()
@@ -117,7 +117,7 @@ local function reelCasting()
     end
 end
 
-Section:CreateToggle("Auto Reel Cast", function(value)
+Section:CreateToggle("Auto Cast", function(value)
     isAutoCasting = value
 end)
 
@@ -135,7 +135,7 @@ local function autoClick2()
     end
 end
 
-Section:CreateToggle("Auto Shake(slow)", function(value)
+Section:CreateToggle("Auto Shake(Fast&Best)", function(value)
     isAutoClicking1 = value
 end)
 
