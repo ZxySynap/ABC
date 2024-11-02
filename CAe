@@ -62,7 +62,7 @@ end)
 local isAutoCatch = false
 Section:CreateToggle("Instant Perfect Catch", function(value)
     isAutoCatch = value
-    print("Auto Catch:", value) -- Debug print for Auto Catch
+    print("Auto Catch:", value) 
 end)
 
 local function startCatching()
@@ -144,7 +144,7 @@ end
 
 Section:CreateToggle("Auto Reel Cast", function(value)
     isAutoCasting = value
-    print("Auto Casting:", value) -- Debug print for Auto Casting
+    print("Auto Casting:", value) 
 end)
 
 runService.RenderStepped:Connect(reelCasting)
