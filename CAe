@@ -124,27 +124,19 @@ end)
 runService.RenderStepped:Connect(reelCasting)
 
 local function autoClick2()
-   if isAutoClicking1 then
-        local button = playerGui.shakeui.safezone:FindFirstChild("button")
+    if isAutoClicking1 then
+        local GuiService = game:GetService('GuiService')
+        local button = game:GetService("Players").LocalPlayer.PlayerGui.shakeui.safezone:FindFirstChild("button")
         GuiService.SelectedObject = button
-        virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
-        wait(0)
-        virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+        if GuiService.SelectedObject == button then
+            virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+            virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+        end
     end
 end
 
 Section:CreateToggle("Auto Shake(slow)", function(value)
     isAutoClicking1 = value
-    if isAutoCasting or isAutoClicking1 then
-        coroutine.wrap(function()
-            while isAutoClicking1 do
-                local button = game:GetService("Players").LocalPlayer.PlayerGui.shakeui.safezone:FindFirstChild("button")
-                GuiService.SelectedObject = button
-                virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
-                virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
-                task.wait()
-            end
-        end)()
-    end
 end)
 
+runService.RenderStepped:Connect(autoClick2)
