@@ -151,10 +151,6 @@ runService.RenderStepped:Connect(reelCasting)
 
 local isAutoClicking1 = false
 
-Section:CreateToggle("Auto Shake(Activeted)", function(value)
-    isAutoClicking1 = value 
-end)
-
 local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 
 local function autoClick2()
@@ -166,6 +162,10 @@ local function autoClick2()
         button:Activated()  -- Simulate button click
     end
 end
+
+Section:CreateToggle("Auto Shake(Activeted)", function(value)
+    isAutoClicking1 = value 
+end)
 
 runService.RenderStepped:Connect(autoClick2) 
 
