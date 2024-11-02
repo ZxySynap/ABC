@@ -154,8 +154,8 @@ local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui
 
 local function autoClick2()
     local shakeui = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") or game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("shakeui", 5)
-    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
-    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+    virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+    virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
 end
 
 runService.RenderStepped:Connect(autoClick2)
