@@ -217,3 +217,29 @@ Section:CreateToggle("Travelling Merchant Notifier", function(value)
         Mnotified = false
     end
 end)
+
+local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+local isAutoClicking1 = false
+
+local function autoClick2()
+    local shakeUI = playerGui:FindFirstChild("shakeui")
+    if not shakeUI then return end
+
+    local button = shakeUI.safezone and shakeUI.safezone:FindFirstChild("button")
+    if button and button:IsA("ImageButton") and isAutoClicking then
+        button:Activated()
+    end
+end
+
+Section:CreateToggle("Auto Shake (Activeted)", function(value1)
+    isAutoClicking1 = value1
+    if value1 then
+        coroutine.wrap(function()
+            while isAutoClicking2 do
+                autoClick()
+                task.wait()
+            end
+        end)()
+    end
+end)
+
