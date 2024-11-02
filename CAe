@@ -141,6 +141,12 @@ end)
 
 runService.RenderStepped:Connect(autoClick2)
 
+Section:CreateButton("dep pool", function()
+    local character = player.Character or player.CharacterAdded:Wait()
+    local rootPart = character:WaitForChild("HumanoidRootPart")
+    rootPart.CFrame = CFrame.new(-1659, -214, -2847)
+end)
+
 task.spawn(function()
     while wait(320) do
         pcall(function()
