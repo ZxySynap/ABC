@@ -22,7 +22,6 @@ local function click_this_gui(to_click: GuiObject, offsetX, offsetY)
 
     local x = to_click.AbsolutePosition.X + offset.x + offsetX
     local y = to_click.AbsolutePosition.Y + offset.y + offsetY
-
     virtualInput:SendMouseButtonEvent(x + inset.X, y + inset.Y, 0, true, game, 0)
     virtualInput:SendMouseButtonEvent(x + inset.X, y + inset.Y, 0, false, game, 0)
 end
@@ -47,7 +46,7 @@ local function autoClick()
     end
 end
 
-Section:CreateToggle("Auto Shake", function(value)
+Section:CreateToggle("Auto Shake(Fast)", function(value)
     isAutoClicking = value
     if value then
         coroutine.wrap(function()
@@ -154,32 +153,14 @@ local isAutoClicking1 = false
 local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 
 local function autoClick2()
-    local shakeUI = playerGui:FindFirstChild("shakeui")
-    if not shakeUI then return end
-
-    local button = shakeUI.safezone and shakeUI.safezone:FindFirstChild("button")
-    if button and button:IsA("ImageButton") and isAutoClicking1 then
-        -- Manually simulate the click without using button:Activated()
-        local userInputService = game:GetService("UserInputService")
-        local virtualInput = game:GetService("VirtualInputManager")
-
-        -- Calculate the position of the button
-        local buttonPosition = button.AbsolutePosition
-        local buttonSize = button.AbsoluteSize
-        
-        -- Calculate center of the button
-        local clickX = buttonPosition.X + (buttonSize.X / 2)
-        local clickY = buttonPosition.Y + (buttonSize.Y / 2)
-        
-        -- Use VirtualInputManager to simulate the button click
-        virtualInput:SendMouseButtonEvent(clickX, clickY, 0, true, game, 0)
-        virtualInput:SendMouseButtonEvent(clickX, clickY, 0, false, game, 0)
-    end
+    local shakeui = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") or game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("shakeui", 5)
+    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
 end
 
 runService.RenderStepped:Connect(autoClick2)
 
-Section:CreateToggle("Auto Shake(Activeted)", function(value)
+Section:CreateToggle("Auto Shake(Nomal)", function(value)
     isAutoClicking1 = value 
 end)
 
