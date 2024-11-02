@@ -128,8 +128,8 @@ local function autoClick2()
         local button = playerGui.shakeui.safezone:FindFirstChild("button")
         if button then
             GuiService.SelectedObject = button
-            virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
-            --virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+            --virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+            virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
         end
         task.wait(0) -- ปรับค่าตามที่ต้องการ
     end
