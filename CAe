@@ -46,7 +46,7 @@ local function autoClick()
     end
 end
 
-Section:CreateToggle("Auto Shake(Fast)new!!", function(value)
+Section:CreateToggle("Auto Shake(Random Click)", function(value)
     isAutoClicking = value
     if value then
         coroutine.wrap(function()
