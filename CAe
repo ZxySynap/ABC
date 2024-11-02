@@ -7,6 +7,7 @@ local playerGui = player:WaitForChild("PlayerGui")
 local GuiService = game:GetService("GuiService")
 local virtualInput = game:GetService("VirtualInputManager")
 local isAutoClicking = false
+local isAutoClicking1 = false
 
 local function click_this_gui(to_click: GuiObject, offsetX, offsetY)
     if not iswindowactive() then
@@ -29,20 +30,14 @@ end
 local function autoClick()
     local shakeUI = playerGui:FindFirstChild("shakeui")
     
-    if not shakeUI then
-        return
-    end
-
-    local button = shakeUI.safezone and shakeUI.safezone:FindFirstChild("button")
-    
-    if not button then
-        return
-    end
-
-    if button and button:IsA("ImageButton") and isAutoClicking then
-        local offsetX = 5  
-        local offsetY = 0  
-        click_this_gui(button, offsetX, offsetY)]]
+    if shakeUI then
+        local button = shakeUI.safezone and shakeUI.safezone:FindFirstChild("button")
+        
+        if button and button:IsA("ImageButton") and isAutoClicking then
+            local offsetX = 5
+            local offsetY = 0
+            click_this_gui(button, offsetX, offsetY)
+        end
     end
 end
 
@@ -52,23 +47,20 @@ Section:CreateToggle("Auto Shake(Random Click)", function(value)
         coroutine.wrap(function()
             while isAutoClicking do
                 autoClick()
-                task.wait()
+                task.wait(0) -- ปรับค่าตามที่ต้องการ
             end
         end)()
     end
 end)
 
+-- Instant Perfect Catch
 local isAutoCatch = false
 Section:CreateToggle("Instant Perfect Catch", function(value)
     isAutoCatch = value
-    print("Auto Catch:", value) 
 end)
 
 local function startCatching()
     local reelBar = playerGui:FindFirstChild("reel") and playerGui.reel:FindFirstChild("bar")
-    if reelBar == nil then
-        return
-    end
     if reelBar and isAutoCatch then
         game:GetService("ReplicatedStorage").events.reelfinished:FireServer(100, true)
     end
@@ -76,6 +68,7 @@ end
 
 runService.RenderStepped:Connect(startCatching)
 
+-- Auto Reel Cast
 local isAutoCasting = false 
 local bodyPosition
 
@@ -93,65 +86,43 @@ local function equipRod()
 end
 
 local function reelCasting()
-    if not isAutoCasting then
+    if isAutoCasting then
+        local character = player.Character or player.CharacterAdded:Wait()
+        local rootPart = character:WaitForChild("HumanoidRootPart")
+
+        if not bodyPosition then
+            bodyPosition = Instance.new("BodyPosition")
+            bodyPosition.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+            bodyPosition.D = 1000
+            bodyPosition.P = 10000
+            bodyPosition.Parent = rootPart
+        end
+
+        local equippedTool = isRodEquipped() and player.Character:FindFirstChildWhichIsA("Tool") or equipRod()
+
+        if equippedTool then
+            local castEvent = equippedTool:FindFirstChild("events") and equippedTool.events:FindFirstChild("cast")
+            local resetEvent = equippedTool:FindFirstChild("events") and equippedTool.events:FindFirstChild("reset")
+            if castEvent then
+                castEvent:FireServer(100, 1)
+            elseif resetEvent then
+                resetEvent:FireServer()
+            end
+        end
+    else
         if bodyPosition then
             bodyPosition:Destroy()
             bodyPosition = nil
-        end
-        return
-    end
-
-    local function centerButton()
-        local shakeUI = playerGui:FindFirstChild("shakeui")
-        if not shakeUI then return end
-
-        local button = shakeUI.safezone and shakeUI.safezone:FindFirstChild("button")
-        if button and button:IsA("ImageButton") then
-            button.AnchorPoint = Vector2.new(0.5, 0.5)
-            button.Position = UDim2.new(0.5, 0, 0.5, 0)
-            button.Size = UDim2.new(0, 100, 0, 100)
-        end
-    end
-
-    centerButton()
-
-    local character = player.Character or player.CharacterAdded:Wait()
-    local rootPart = character:WaitForChild("HumanoidRootPart")
-
-    if not bodyPosition then
-        local lockedPosition = rootPart.Position
-        bodyPosition = Instance.new("BodyPosition")
-        bodyPosition.Position = lockedPosition
-        bodyPosition.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-        bodyPosition.D = 1000
-        bodyPosition.P = 10000
-        bodyPosition.Parent = rootPart
-    end
-
-    local equippedTool = isRodEquipped() and player.Character:FindFirstChildWhichIsA("Tool") or equipRod()
-
-    if equippedTool then
-        local castEvent = equippedTool:FindFirstChild("events") and equippedTool.events:FindFirstChild("cast")
-        local resetEvent = equippedTool:FindFirstChild("events") and equippedTool.events:FindFirstChild("reset")
-        if castEvent then
-            castEvent:FireServer(100, 1)
-        elseif resetEvent then
-            resetEvent:FireServer()
         end
     end
 end
 
 Section:CreateToggle("Auto Reel Cast", function(value)
     isAutoCasting = value
-    print("Auto Casting:", value) 
 end)
 
 runService.RenderStepped:Connect(reelCasting)
 
-local isAutoClicking1 = false
-local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-local GuiService = game:GetService('GuiService')
-        
 local function autoClick2()
     while isAutoClicking1 do
         local button = playerGui.shakeui.safezone:FindFirstChild("button")
@@ -160,7 +131,7 @@ local function autoClick2()
             virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
             virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
         end
-        task.wait(0) -- หรือค่าที่เล็กกว่า เช่น 0.01 หรือ 0.001
+        task.wait(0)
     end
 end
 
