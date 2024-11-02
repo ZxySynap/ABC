@@ -159,9 +159,25 @@ local function autoClick2()
 
     local button = shakeUI.safezone and shakeUI.safezone:FindFirstChild("button")
     if button and button:IsA("ImageButton") and isAutoClicking1 then
-        button:Activated()  -- Simulate button click
+        -- Manually simulate the click without using button:Activated()
+        local userInputService = game:GetService("UserInputService")
+        local virtualInput = game:GetService("VirtualInputManager")
+
+        -- Calculate the position of the button
+        local buttonPosition = button.AbsolutePosition
+        local buttonSize = button.AbsoluteSize
+        
+        -- Calculate center of the button
+        local clickX = buttonPosition.X + (buttonSize.X / 2)
+        local clickY = buttonPosition.Y + (buttonSize.Y / 2)
+        
+        -- Use VirtualInputManager to simulate the button click
+        virtualInput:SendMouseButtonEvent(clickX, clickY, 0, true, game, 0)
+        virtualInput:SendMouseButtonEvent(clickX, clickY, 0, false, game, 0)
     end
 end
+
+runService.RenderStepped:Connect(autoClick2)
 
 Section:CreateToggle("Auto Shake(Activeted)", function(value)
     isAutoClicking1 = value 
