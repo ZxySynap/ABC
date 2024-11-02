@@ -70,7 +70,6 @@ runService.RenderStepped:Connect(startCatching)
 
 -- Auto Reel Cast
 local isAutoCasting = false 
-local bodyPosition
 
 local function isRodEquipped()
     return player.Character and player.Character:FindFirstChildWhichIsA("Tool") and player.Character:FindFirstChildWhichIsA("Tool").Name:lower():find("rod")
@@ -90,12 +89,6 @@ local function reelCasting()
         local character = player.Character or player.CharacterAdded:Wait()
         local rootPart = character:WaitForChild("HumanoidRootPart")
 
-        if not bodyPosition then
-            bodyPosition = Instance.new("BodyPosition")
-            character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
-            character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, false)
-        end
-
         local equippedTool = isRodEquipped() and player.Character:FindFirstChildWhichIsA("Tool") or equipRod()
 
         if equippedTool then
@@ -106,13 +99,6 @@ local function reelCasting()
             elseif resetEvent then
                 resetEvent:FireServer()
             end
-        end
-    else
-        if bodyPosition then
-            character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
-            character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, true)
-            bodyPosition:Destroy()
-            bodyPosition = nil
         end
     end
 end
