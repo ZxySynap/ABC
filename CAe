@@ -149,23 +149,25 @@ end)
 
 runService.RenderStepped:Connect(reelCasting)
 
-local isAutoShake = false
-Section:CreateToggle("Always Center Shake", function(value)
-    local isAutoClicking1 = value
+local isAutoClicking1 = false
+
+Section:CreateToggle("Auto Shake(Activeted)", function(value)
+    isAutoClicking1 = value 
 end)
 
 local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+
 local function autoClick2()
     local shakeUI = playerGui:FindFirstChild("shakeui")
     if not shakeUI then return end
 
     local button = shakeUI.safezone and shakeUI.safezone:FindFirstChild("button")
     if button and button:IsA("ImageButton") and isAutoClicking1 then
-        button:Activated()
+        button:Activated()  -- Simulate button click
     end
 end
 
-runService.RenderStepped:Connect(autoClick2)
+runService.RenderStepped:Connect(autoClick2) 
 
 
 
