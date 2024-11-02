@@ -92,8 +92,8 @@ local function reelCasting()
 
         if not bodyPosition then
             bodyPosition = Instance.new("BodyPosition")
-            print("active")
-            bodyPosition.Parent = rootPart
+            character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+            character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, false)
         end
 
         local equippedTool = isRodEquipped() and player.Character:FindFirstChildWhichIsA("Tool") or equipRod()
@@ -109,6 +109,8 @@ local function reelCasting()
         end
     else
         if bodyPosition then
+            character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+            character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, true)
             bodyPosition:Destroy()
             bodyPosition = nil
         end
