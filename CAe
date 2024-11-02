@@ -92,8 +92,7 @@ local function reelCasting()
 
         if not bodyPosition then
             bodyPosition = Instance.new("BodyPosition")
-            bodyPosition.D = 1000
-            bodyPosition.P = 10000
+            print("active")
             bodyPosition.Parent = rootPart
         end
 
