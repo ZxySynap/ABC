@@ -149,26 +149,24 @@ end)
 runService.RenderStepped:Connect(reelCasting)
 
 local isAutoClicking1 = false
-
 local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-
+local GuiService = game:GetService('GuiService')
+        
 local function autoClick2()
-    if isAutoClicking1 then
-        local GuiService = game:GetService('GuiService')
-        local button = game:GetService("Players").LocalPlayer.PlayerGui.shakeui.safezone:FindFirstChild("button")
-        GuiService.SelectedObject = button
-        virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
-        virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+    while isAutoClicking1 do
+        local button = playerGui.shakeui.safezone:FindFirstChild("button")
+        if button then
+            GuiService.SelectedObject = button
+            virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+            virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+        end
+        task.wait(0) -- หรือค่าที่เล็กกว่า เช่น 0.01 หรือ 0.001
     end
 end
 
-runService.RenderStepped:Connect(autoClick2)
-
 Section:CreateToggle("Auto Shake(slow)", function(value)
-    isAutoClicking1 = value 
+    isAutoClicking1 = value
+    if value then
+        task.spawn(autoClick2)
+    end
 end)
-
-runService.RenderStepped:Connect(autoClick2) 
-
-
-
