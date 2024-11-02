@@ -141,7 +141,7 @@ end)
 
 runService.RenderStepped:Connect(autoClick2)
 
-Section:CreateButton("dep pool", function()
+Section:CreateButton("Desolate Deep", function()
     local character = player.Character or player.CharacterAdded:Wait()
     local rootPart = character:WaitForChild("HumanoidRootPart")
     rootPart.CFrame = CFrame.new(-1659, -214, -2847)
