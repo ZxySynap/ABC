@@ -124,7 +124,7 @@ end)
 runService.RenderStepped:Connect(reelCasting)
 
 local function autoClick2()
-    while isAutoClicking1 do
+   if isAutoClicking1 then
         local button = playerGui.shakeui.safezone:FindFirstChild("button")
         if button then
             GuiService.SelectedObject = button
@@ -132,13 +132,10 @@ local function autoClick2()
             wait(0)
             virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
         end
-        task.wait(0) -- ปรับค่าตามที่ต้องการ
     end
 end
 
 Section:CreateToggle("Auto Shake(slow)", function(value)
     isAutoClicking1 = value
-    if value then
-        task.spawn(autoClick2)
-    end
 end)
+runService.RenderStepped:Connect(autoClick2())
