@@ -4,8 +4,6 @@ local Section = Window:NewSection("Casting Options")
 local player = game:GetService("Players").LocalPlayer
 local runService = game:GetService("RunService")
 local playerGui = player:WaitForChild("PlayerGui")
-
--- Auto Click SHAKE button using VirtualInputManager
 local GuiService = game:GetService("GuiService")
 local virtualInput = game:GetService("VirtualInputManager")
 local isAutoClicking = false
@@ -49,7 +47,6 @@ local function autoClick()
     end
 end
 
--- Auto Shake Toggle
 Section:CreateToggle("Auto Shake", function(value)
     isAutoClicking = value
     if value then
@@ -62,7 +59,6 @@ Section:CreateToggle("Auto Shake", function(value)
     end
 end)
 
--- Auto Catch Toggle
 local isAutoCatch = false
 Section:CreateToggle("Instant Perfect Catch", function(value)
     isAutoCatch = value
@@ -81,7 +77,6 @@ end
 
 runService.RenderStepped:Connect(startCatching)
 
--- Auto Cast Toggle
 local isAutoCasting = false 
 local bodyPosition
 
@@ -107,7 +102,6 @@ local function reelCasting()
         return
     end
 
-    -- Center the shake button
     local function centerButton()
         local shakeUI = playerGui:FindFirstChild("shakeui")
         if not shakeUI then return end
@@ -155,7 +149,6 @@ end)
 
 runService.RenderStepped:Connect(reelCasting)
 
--- Auto Center SHAKE button
 local isAutoShake = false
 Section:CreateToggle("Always Center Shake", function(value)
     isAutoShake = value
@@ -185,7 +178,6 @@ end
 
 runService.RenderStepped:Connect(centerButton)
 
--- Event Notifiers
 local EventsSection = Tabs.Fish:AddSection("Notifier")
 local notified = false
 
