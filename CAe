@@ -92,7 +92,6 @@ local function reelCasting()
 
         if not bodyPosition then
             bodyPosition = Instance.new("BodyPosition")
-            bodyPosition.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
             bodyPosition.D = 1000
             bodyPosition.P = 10000
             bodyPosition.Parent = rootPart
