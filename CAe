@@ -1,5 +1,5 @@
 local Library = loadstring(Game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wizard"))()
-local Window = Library:NewWindow("Fisch")
+local Window = Library:NewWindow("Fisch by Zxysynap")
 local Section = Window:NewSection("Casting Options")
 local player = game:GetService("Players").LocalPlayer
 local runService = game:GetService("RunService")
