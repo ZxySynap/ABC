@@ -23,8 +23,8 @@ local function click_this_gui(to_click: GuiObject, offsetX, offsetY)
     local x = to_click.AbsolutePosition.X + offset.x + offsetX
     local y = to_click.AbsolutePosition.Y + offset.y + offsetY
 
-    virtualInput::SendKeyEvent(x + inset.X, y + inset.Y, 0, false, game, 0) --virtualInput:SendMouseButtonEvent(x + inset.X, y + inset.Y, 0, true, game, 0)
-    virtualInput::SendKeyEvent(x + inset.X, y + inset.Y, 0, false, game, 0) --virtualInput:SendMouseButtonEvent(x + inset.X, y + inset.Y, 0, false, game, 0)
+    virtualInput:SendKeyEvent(x + inset.X, y + inset.Y, 0, false, game, 0) --virtualInput:SendMouseButtonEvent(x + inset.X, y + inset.Y, 0, true, game, 0)
+    virtualInput:SendKeyEvent(x + inset.X, y + inset.Y, 0, false, game, 0) --virtualInput:SendMouseButtonEvent(x + inset.X, y + inset.Y, 0, false, game, 0)
 end
 
 local function autoClick()
