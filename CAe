@@ -151,95 +151,21 @@ runService.RenderStepped:Connect(reelCasting)
 
 local isAutoShake = false
 Section:CreateToggle("Always Center Shake", function(value)
-    isAutoShake = value
-end)
-
-local function centerButton()
-    local shakeUI = playerGui:FindFirstChild("shakeui")
-    
-    if not shakeUI then
-        return
-    end
-
-    local button = shakeUI.safezone and shakeUI.safezone:FindFirstChild("button")
-    
-    if not button then
-        return
-    end
-
-    if isAutoShake then
-        if button:IsA("ImageButton") then
-            button.AnchorPoint = Vector2.new(0.5, 0.5)
-            button.Position = UDim2.new(0.5, 0, 0.5, 0)
-            button.Size = UDim2.new(0, 100, 0, 100)
-        end
-    end
-end
-
-runService.RenderStepped:Connect(centerButton)
-
-local EventsSection = Tabs.Fish:AddSection("Notifier")
-local notified = false
-
-Section:CreateToggle("Frightful Pool Notifier", function(value)
-    if value then
-        game:GetService("RunService").Heartbeat:Connect(function()
-            if ToggleEventPool.Value then
-                local FischFrightExists = workspace.zones.fishing:FindFirstChild("FischFright24")
-                if FischFrightExists and not notified then
-                    SendNotif("Event", "Frightful Pool has appeared!! Hurry!!", 10)
-                    notified = true
-                elseif not FischFrightExists then
-                    notified = false
-                end
-            end
-        end)
-    else
-        notified = false
-    end
-end)
-
-local Mnotified = false
-Section:CreateToggle("Travelling Merchant Notifier", function(value)
-    if value then
-        game:GetService("RunService").Heartbeat:Connect(function()
-            if ToggleMerchant.Value then
-                local MerchantBoat = workspace.zones.fishing:FindFirstChild("FischFright24")
-                if MerchantBoat and not Mnotified then
-                    SendNotif("Merchant Spawned", "Travelling Merchant has appeared!! Hurry!!", 10)
-                    Mnotified = true
-                elseif not MerchantBoat then
-                    Mnotified = false
-                end
-            end
-        end)
-    else
-        Mnotified = false
-    end
+    local isAutoClicking1 = value
 end)
 
 local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-local isAutoClicking1 = false
-
 local function autoClick2()
     local shakeUI = playerGui:FindFirstChild("shakeui")
     if not shakeUI then return end
 
     local button = shakeUI.safezone and shakeUI.safezone:FindFirstChild("button")
-    if button and button:IsA("ImageButton") and isAutoClicking then
+    if button and button:IsA("ImageButton") and isAutoClicking1 then
         button:Activated()
     end
 end
 
-Section:CreateToggle("Auto Shake (Activeted)", function(value1)
-    isAutoClicking1 = value1
-    if value1 then
-        coroutine.wrap(function()
-            while isAutoClicking2 do
-                autoClick()
-                task.wait()
-            end
-        end)()
-    end
-end)
+runService.RenderStepped:Connect(autoClick2)
+
+
 
