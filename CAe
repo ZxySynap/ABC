@@ -127,6 +127,8 @@ end
 
 runService.RenderStepped:Connect(startCatching)
 
+local fun
+
 Section:CreateButton("More Money[BETA]", function()
     task.spawn(function()
         while wait(320) do
@@ -134,7 +136,6 @@ Section:CreateButton("More Money[BETA]", function()
                 local Money = game:GetService("Players").LocalPlayer.PlayerGui.hud.safezone.coins
                 Money.moneyui.MoneyChange.Text = 100000000
                 wait(10)
-                end)
             end)
         end
     end)
