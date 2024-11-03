@@ -1,8 +1,9 @@
 local Library = loadstring(Game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wizard"))()
 local Window = Library:NewWindow("Fisch by Zxysynap")
-local Window2 = Library:NewWindow("Island")
+--local Window2 = Library:NewWindow("Island")
 local Section = Window:NewSection("Casting Options")
-local Section2 = Window2:NewSection("Teleport")
+local SectionTP = Window:NewSection("Island")
+--local Section2 = Window2:NewSection("Teleport")
 local player = game:GetService("Players").LocalPlayer
 local runService = game:GetService("RunService")
 local playerGui = player:WaitForChild("PlayerGui")
@@ -11,6 +12,18 @@ local virtualInput = game:GetService("VirtualInputManager")
 local isAutoClicking = false
 local isAutoClicking1 = false
 local isAutoCasting = false 
+
+local Locations = {
+    ["Desolate Deep"] = CFrame.new(-1659, -214, -2847),
+    ["Sunstone"] = CFrame.new(-918, 135, -1123),
+    ["Statue of Sovereignty"] = CFrame.new(26, 159, -1037),
+    ["The Arch"] = CFrame.new(988, 131, -1238),
+    ["MushGrove Swamp"] = CFrame.new(2438, 132, -689),
+    ["Snowcap"] = CFrame.new(2618, 146, 2402),
+    ["Terrapin"] = CFrame.new(-189, 143, 1926),
+    ["Roslit"] = CFrame.new(-1482, 138, 738),
+    ["MooseWood"] = CFrame.new(384, 134, 232)
+}
 
 local function isRodEquipped()
     return player.Character and player.Character:FindFirstChildWhichIsA("Tool") and player.Character:FindFirstChildWhichIsA("Tool").Name:lower():find("rod")
@@ -81,6 +94,16 @@ local function startCatching()
 end
 
 runService.RenderStepped:Connect(startCatching)
+
+Section:CreateDropdown("DropDown", {"Desolate Deep", "Sunstone", "Statue of Sovereignty", "The Arch", "MushGrove Swamp", "Snowcap", "Terrapin", "Roslit", "MooseWood"}, 2, function(selectedLocation)
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    
+    if Locations[selectedLocation] then
+        local rootPart = character:WaitForChild("HumanoidRootPart")
+        rootPart.CFrame = Locations[selectedLocation]
+    end
+end)
 
 Section:CreateButton("Desolate Deep", function()
     local character = player.Character or player.CharacterAdded:Wait()
