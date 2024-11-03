@@ -37,17 +37,9 @@ end
 local function reelCasting()
     if isAutoCasting then
         local character = player.Character or player.CharacterAdded:Wait()
-        local rootPart = character:WaitForChild("HumanoidRootPart")
+        
         local equippedTool = isRodEquipped() and player.Character:FindFirstChildWhichIsA("Tool") or equipRod()
-
-        if not rootPart:FindFirstChild("Lock") then
-            local bodyPosition = Instance.new("BodyPosition")
-            bodyPosition.Name = "Lock"
-            bodyPosition.MaxForce = Vector3.new(4000, 4000, 4000)
-            bodyPosition.Position = rootPart.Position
-            bodyPosition.Parent = rootPart
-        end
-
+        
         if equippedTool then
             local castEvent = equippedTool:FindFirstChild("events") and equippedTool.events:FindFirstChild("cast")
             local resetEvent = equippedTool:FindFirstChild("events") and equippedTool.events:FindFirstChild("reset")
@@ -62,11 +54,6 @@ end
 
 Section:CreateToggle("Auto Cast", function(value)
     isAutoCasting = value
-    local character = player.Character or player.CharacterAdded:Wait()
-    local rootPart = character:WaitForChild("HumanoidRootPart")
-    if rootPart:FindFirstChild("Lock") and not value then
-        rootPart:FindFirstChild("Lock"):Destroy()
-    end
 end)
 
 runService.RenderStepped:Connect(reelCasting)
