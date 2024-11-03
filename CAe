@@ -125,14 +125,14 @@ function teleportToSavedPosition()
     end
 end
 
-SectionTP:CreateButton("Sell All", function()
+SectionTP:CreateButton("Sell All(MooseWood)", function()
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
     local rootPart = character:WaitForChild("HumanoidRootPart")
     savePosition()
     task.wait(0.2)
-    rootPart.CFrame = game:GetService("Workspace").world.npcs["Max Merchant"]:FindFirstChild("HumanoidRootPart").CFrame
-    game:GetService("Workspace").world.npcs["Max Merchant"].merchant.sellall:InvokeServer()
+    rootPart.CFrame = CFrame.new(384, 134, 232)
+    game:GetService("Workspace").world.npcs["Mar Merchant"].merchant.sellall:InvokeServer()
     task.wait(0.2)
     teleportToSavedPosition()
 end)
