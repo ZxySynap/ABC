@@ -124,7 +124,7 @@ SectionTP:CreateButton("Sell All(Merchant)", function()
         local merchant = game:GetService("Workspace").world.npcs:FindFirstChild("Mar Merchant")
         
         if merchant and merchant:FindFirstChild("HumanoidRootPart") then
-            rootPart.CFrame = merchant.HumanoidRootPart.CFrame
+            rootPart.CFrame = CFrame.new()
             merchant.merchant.sellall:InvokeServer()
             task.wait(0.2)
             rootPart.CFrame = originalPosition
