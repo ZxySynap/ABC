@@ -95,7 +95,7 @@ end
 
 runService.RenderStepped:Connect(startCatching)
 
-Section:CreateDropdown("DropDown", {"Desolate Deep", "Sunstone", "Statue of Sovereignty", "The Arch", "MushGrove Swamp", "Snowcap", "Terrapin", "Roslit", "MooseWood"}, 2, function(selectedLocation)
+SectionTP:CreateDropdown("DropDown", {"Desolate Deep", "Sunstone", "Statue of Sovereignty", "The Arch", "MushGrove Swamp", "Snowcap", "Terrapin", "Roslit", "MooseWood"}, 2, function(selectedLocation)
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
     
@@ -103,12 +103,6 @@ Section:CreateDropdown("DropDown", {"Desolate Deep", "Sunstone", "Statue of Sove
         local rootPart = character:WaitForChild("HumanoidRootPart")
         rootPart.CFrame = Locations[selectedLocation]
     end
-end)
-
-Section:CreateButton("Desolate Deep", function()
-    local character = player.Character or player.CharacterAdded:Wait()
-    local rootPart = character:WaitForChild("HumanoidRootPart")
-    rootPart.CFrame = CFrame.new(-1659, -214, -2847)
 end)
 
 task.spawn(function()
