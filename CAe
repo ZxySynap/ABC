@@ -45,6 +45,12 @@ local function reelCasting()
 
         local equippedTool = isRodEquipped() and player.Character:FindFirstChildWhichIsA("Tool") or equipRod()
 
+        local bodyPosition = Instance.new("BodyPosition")
+        bodyPosition.Name = "Lock"
+        bodyPosition.MaxForce = Vector3.new(4000, 4000, 4000)
+        bodyPosition.Position = rootPart.Position
+        bodyPosition.Parent = rootPart
+
         if equippedTool then
             local castEvent = equippedTool:FindFirstChild("events") and equippedTool.events:FindFirstChild("cast")
             local resetEvent = equippedTool:FindFirstChild("events") and equippedTool.events:FindFirstChild("reset")
@@ -53,6 +59,10 @@ local function reelCasting()
             elseif resetEvent then
                 resetEvent:FireServer()
             end
+        end
+    else
+        if rootPart:FindFirstChild("Lock") then
+            rootPart:FindFirstChild("Lock"):Destroy()
         end
     end
 end
