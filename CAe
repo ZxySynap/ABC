@@ -100,7 +100,7 @@ end)
 
 runService.RenderStepped:Connect(startCatching)
 
-SectionTP:CreateDropdown("DropDown", table.keys(Locations), 2, function(selectedLocation)
+SectionTP:CreateDropdown("DropDown", {"Desolate Deep", "Sunstone", "Statue of Sovereignty", "The Arch", "MushGrove Swamp", "Snowcap", "Terrapin", "Roslit", "MooseWood"}, 2, function(selectedLocation)
     local character = player.Character or player.CharacterAdded:Wait()
     local rootPart = character:WaitForChild("HumanoidRootPart")
     
