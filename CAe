@@ -1,17 +1,13 @@
-local Library = loadstring(Game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wizard"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wizard"))()
 local Window = Library:NewWindow("Fisch by Zxysynap (v0.16)")
---local Window2 = Library:NewWindow("Island")
 local Section = Window:NewSection("Casting Options")
 local SectionTP = Window:NewSection("Island")
---local Section2 = Window2:NewSection("Teleport")
+
 local player = game:GetService("Players").LocalPlayer
 local runService = game:GetService("RunService")
 local playerGui = player:WaitForChild("PlayerGui")
-local GuiService = game:GetService("GuiService")
 local virtualInput = game:GetService("VirtualInputManager")
-local isAutoClicking = false
-local isAutoClicking1 = false
-local isAutoCasting = false 
+local isAutoClicking1, isAutoCasting, isAutoCatch = false, false, false 
 
 local Locations = {
     ["Desolate Deep"] = CFrame.new(-1659, -214, -2847),
@@ -42,7 +38,6 @@ local function reelCasting()
     if isAutoCasting then
         local character = player.Character or player.CharacterAdded:Wait()
         local rootPart = character:WaitForChild("HumanoidRootPart")
-
         local equippedTool = isRodEquipped() and player.Character:FindFirstChildWhichIsA("Tool") or equipRod()
 
         if not rootPart:FindFirstChild("Lock") then
@@ -78,10 +73,8 @@ runService.RenderStepped:Connect(reelCasting)
 
 local function autoClick2()
     if isAutoClicking1 then
-        local GuiService = game:GetService('GuiService')
-        local button = game:GetService("Players").LocalPlayer.PlayerGui.shakeui.safezone:FindFirstChild("button")
-        GuiService.SelectedObject = button
-        if GuiService.SelectedObject == button then
+        local button = playerGui:FindFirstChild("shakeui") and playerGui.shakeui.safezone:FindFirstChild("button")
+        if button then
             virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
             virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
         end
@@ -94,11 +87,6 @@ end)
 
 runService.RenderStepped:Connect(autoClick2)
 
-local isAutoCatch = false
-Section:CreateToggle("Instant Perfect Catch", function(value)
-    isAutoCatch = value
-end)
-
 local function startCatching()
     local reelBar = playerGui:FindFirstChild("reel") and playerGui.reel:FindFirstChild("bar")
     if reelBar and isAutoCatch then
@@ -106,14 +94,17 @@ local function startCatching()
     end
 end
 
+Section:CreateToggle("Instant Perfect Catch", function(value)
+    isAutoCatch = value
+end)
+
 runService.RenderStepped:Connect(startCatching)
 
-SectionTP:CreateDropdown("DropDown", {"Desolate Deep", "Sunstone", "Statue of Sovereignty", "The Arch", "MushGrove Swamp", "Snowcap", "Terrapin", "Roslit", "MooseWood"}, 2, function(selectedLocation)
-    local player = game.Players.LocalPlayer
+SectionTP:CreateDropdown("DropDown", table.keys(Locations), 2, function(selectedLocation)
     local character = player.Character or player.CharacterAdded:Wait()
+    local rootPart = character:WaitForChild("HumanoidRootPart")
     
     if Locations[selectedLocation] then
-        local rootPart = character:WaitForChild("HumanoidRootPart")
         rootPart.CFrame = Locations[selectedLocation]
     end
 end)
@@ -121,17 +112,17 @@ end)
 local savedPosition = nil 
 
 function savePosition()
-    local player = game.Players.LocalPlayer
-    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-        savedPosition = player.Character.HumanoidRootPart.Position
+    local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    if rootPart then
+        savedPosition = rootPart.Position
         print("ตำแหน่งถูกบันทึกแล้ว:", savedPosition)
     end
 end
 
 function teleportToSavedPosition()
-    local player = game.Players.LocalPlayer
-    if savedPosition and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-        player.Character.HumanoidRootPart.CFrame = CFrame.new(savedPosition)
+    local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    if savedPosition and rootPart then
+        rootPart.CFrame = CFrame.new(savedPosition)
         print("วาร์ปกลับไปที่ตำแหน่ง:", savedPosition)
     else
         print("ไม่มีตำแหน่งที่บันทึกไว้!")
@@ -139,25 +130,28 @@ function teleportToSavedPosition()
 end
 
 SectionTP:CreateButton("Sell All(Merchant)", function()
-    local player = game.Players.LocalPlayer
-    local character = player.Character or player.CharacterAdded:Wait()
-    local rootPart = character:WaitForChild("HumanoidRootPart")
-    local savedPosition = rootPart.CFrame
-    task.wait(0.2)
-    rootPart.CFrame = game:GetService("Workspace").world.npcs["Mar Merchant"]:FindFirstChild("HumanoidRootPart").CFrame
-    game:GetService("Workspace").world.npcs["Mar Merchant"].merchant.sellall:InvokeServer()
-    task.wait(0.2)
-    rootPart.CFrame = savedPosition * new.(5,0,0)
+    local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    if rootPart then
+        local originalPosition = rootPart.CFrame
+        local merchant = game:GetService("Workspace").world.npcs:FindFirstChild("Mar Merchant")
+        
+        if merchant and merchant:FindFirstChild("HumanoidRootPart") then
+            rootPart.CFrame = merchant.HumanoidRootPart.CFrame
+            merchant.merchant.sellall:InvokeServer()
+            task.wait(0.2)
+            rootPart.CFrame = originalPosition
+        end
+    end
 end)
 
 task.spawn(function()
     while wait(320) do
         pcall(function()
             local anti = game:GetService("VirtualUser")
-            game:GetService("Players").LocalPlayer.Idled:connect(function()
-                anti:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+            player.Idled:connect(function()
+                anti:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
                 wait(1)
-                anti:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+                anti:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
             end)
         end)
     end
