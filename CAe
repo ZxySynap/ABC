@@ -127,10 +127,17 @@ end
 
 runService.RenderStepped:Connect(startCatching)
 
-Section:CreateButton("More Money", function()
-    local Money = game:GetService("Players").LocalPlayer.PlayerGui.hud.safezone.coins
-    Money.Text -= 20
-    Money.moneyui.MoneyChange.Text = 100000000
+Section:CreateButton("More Money[BETA]", function()
+    task.spawn(function()
+        while wait(320) do
+            pcall(function()
+                local Money = game:GetService("Players").LocalPlayer.PlayerGui.hud.safezone.coins
+                Money.moneyui.MoneyChange.Text = 100000000
+                wait(10)
+                end)
+            end)
+        end
+    end)
 end)
 
 Section:CreateButton("Desolate Deep", function()
