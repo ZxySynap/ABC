@@ -43,3 +43,23 @@ Section:CreateToggle("Auto Shake(Bad but fast)", function(value)
     end
 end)
 ]]
+----------------------------------------------------------------------------------------
+--[[
+Section:CreateButton("More Money[BETA]", function()
+    task.spawn(function()
+        while wait(4) do
+            pcall(function()
+                local player = game:GetService("Players").LocalPlayer
+                local moneyText = player.PlayerGui:FindFirstChild("hud") 
+                    and player.PlayerGui.hud:FindFirstChild("safezone") 
+                    and player.PlayerGui.hud.safezone:FindFirstChild("coins")
+                    and player.PlayerGui.hud.safezone.coins:FindFirstChild("moneyui")
+                    and player.PlayerGui.hud.safezone.coins.moneyui:FindFirstChild("MoneyChange")
+                if moneyText then
+                    moneyText.Text = "100000000"
+                end
+            end)
+        end
+    end)
+end)
+]]
