@@ -8,7 +8,7 @@ local GuiService = game:GetService("GuiService")
 local virtualInput = game:GetService("VirtualInputManager")
 local isAutoClicking = false
 local isAutoClicking1 = false
-
+--[[
 local function click_this_gui(to_click: GuiObject, offsetX, offsetY)
     if not iswindowactive() then
         repeat task.wait() until iswindowactive()
@@ -47,27 +47,12 @@ Section:CreateToggle("Auto Shake(Bad but fast)", function(value)
         coroutine.wrap(function()
             while isAutoClicking do
                 autoClick()
-                task.wait(0) -- ปรับค่าตามที่ต้องการ
+                task.wait(0)
             end
         end)()
     end
 end)
-
--- Instant Perfect Catch
-local isAutoCatch = false
-Section:CreateToggle("Instant Perfect Catch", function(value)
-    isAutoCatch = value
-end)
-
-local function startCatching()
-    local reelBar = playerGui:FindFirstChild("reel") and playerGui.reel:FindFirstChild("bar")
-    if reelBar and isAutoCatch then
-        game:GetService("ReplicatedStorage").events.reelfinished:FireServer(100, true)
-    end
-end
-
-runService.RenderStepped:Connect(startCatching)
-
+]]
 -- Auto Reel Cast
 local isAutoCasting = false 
 
@@ -126,6 +111,27 @@ Section:CreateToggle("Auto Shake(Fast&Best)", function(value)
 end)
 
 runService.RenderStepped:Connect(autoClick2)
+
+-- Instant Perfect Catch
+local isAutoCatch = false
+Section:CreateToggle("Instant Perfect Catch", function(value)
+    isAutoCatch = value
+end)
+
+local function startCatching()
+    local reelBar = playerGui:FindFirstChild("reel") and playerGui.reel:FindFirstChild("bar")
+    if reelBar and isAutoCatch then
+        game:GetService("ReplicatedStorage").events.reelfinished:FireServer(100, true)
+    end
+end
+
+runService.RenderStepped:Connect(startCatching)
+
+Section:CreateButton("More Money", function()
+    local Money = game:GetService("Players").LocalPlayer.PlayerGui.hud.safezone.coins
+    Money.Text -= 20
+    Money.moneyui.MoneyChange.Text = 100000000
+end)
 
 Section:CreateButton("Desolate Deep", function()
     local character = player.Character or player.CharacterAdded:Wait()
