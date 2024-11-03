@@ -142,10 +142,10 @@ SectionTP:CreateButton("Sell All(Merchant)", function()
     local rootPart = character:WaitForChild("HumanoidRootPart")
     local savedPosition = rootPart.CFrame
     task.wait(0.2)
-    rootPart.CFrame = CFrame.new(466.16, 1551.002, 224.497)
+    rootPart.CFrame = game:GetService("Workspace").world.npcs["Mar Merchant"]:FindFirstChild("HumanoidRootPart").CFrame
     game:GetService("Workspace").world.npcs["Mar Merchant"].merchant.sellall:InvokeServer()
     task.wait(0.2)
-    rootPart.CFrame = savedPosition
+    rootPart.CFrame = savedPosition * new.(5,0,0)
 end)
 
 task.spawn(function()
