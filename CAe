@@ -8,52 +8,6 @@ local GuiService = game:GetService("GuiService")
 local virtualInput = game:GetService("VirtualInputManager")
 local isAutoClicking = false
 local isAutoClicking1 = false
---[[
-local function click_this_gui(to_click: GuiObject, offsetX, offsetY)
-    if not iswindowactive() then
-        repeat task.wait() until iswindowactive()
-    end
-
-    local inset = GuiService:GetGuiInset()
-    local absoluteSize = to_click.AbsoluteSize
-    local offset = {
-        x = absoluteSize.X / 2,
-        y = absoluteSize.Y / 2
-    }
-
-    local x = to_click.AbsolutePosition.X + offset.x + offsetX
-    local y = to_click.AbsolutePosition.Y + offset.y + offsetY
-    virtualInput:SendMouseButtonEvent(x + inset.X, y + inset.Y, 0, true, game, 0)
-    virtualInput:SendMouseButtonEvent(x + inset.X, y + inset.Y, 0, false, game, 0)
-end
-
-local function autoClick()
-    local shakeUI = playerGui:FindFirstChild("shakeui")
-    
-    if shakeUI then
-        local button = shakeUI.safezone and shakeUI.safezone:FindFirstChild("button")
-        
-        if button and button:IsA("ImageButton") and isAutoClicking then
-            local offsetX = 5
-            local offsetY = 0
-            click_this_gui(button, offsetX, offsetY)
-        end
-    end
-end
-
-Section:CreateToggle("Auto Shake(Bad but fast)", function(value)
-    isAutoClicking = value
-    if value then
-        coroutine.wrap(function()
-            while isAutoClicking do
-                autoClick()
-                task.wait(0)
-            end
-        end)()
-    end
-end)
-]]
--- Auto Reel Cast
 local isAutoCasting = false 
 
 local function isRodEquipped()
@@ -112,7 +66,6 @@ end)
 
 runService.RenderStepped:Connect(autoClick2)
 
--- Instant Perfect Catch
 local isAutoCatch = false
 Section:CreateToggle("Instant Perfect Catch", function(value)
     isAutoCatch = value
@@ -126,27 +79,6 @@ local function startCatching()
 end
 
 runService.RenderStepped:Connect(startCatching)
-
-local fun
-
-Section:CreateButton("More Money[BETA]", function()
-    task.spawn(function()
-        while wait(4) do
-            pcall(function()
-                local player = game:GetService("Players").LocalPlayer
-                local moneyText = player.PlayerGui:FindFirstChild("hud") 
-                    and player.PlayerGui.hud:FindFirstChild("safezone") 
-                    and player.PlayerGui.hud.safezone:FindFirstChild("coins")
-                    and player.PlayerGui.hud.safezone.coins:FindFirstChild("moneyui")
-                    and player.PlayerGui.hud.safezone.coins.moneyui:FindFirstChild("MoneyChange")
-                if moneyText then
-                    moneyText.Text = "100000000"
-                end
-            end)
-        end
-    end)
-end)
-
 
 Section:CreateButton("Desolate Deep", function()
     local character = player.Character or player.CharacterAdded:Wait()
