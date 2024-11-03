@@ -60,15 +60,16 @@ local function reelCasting()
                 resetEvent:FireServer()
             end
         end
-    else
-        if rootPart:FindFirstChild("Lock") then
-            rootPart:FindFirstChild("Lock"):Destroy()
-        end
     end
 end
 
 Section:CreateToggle("Auto Cast", function(value)
     isAutoCasting = value
+    local character = player.Character or player.CharacterAdded:Wait()
+    local rootPart = character:WaitForChild("HumanoidRootPart")
+    if rootPart:FindFirstChild("Lock") and not value then
+            rootPart:FindFirstChild("Lock"):Destroy()
+        end
 end)
 
 runService.RenderStepped:Connect(reelCasting)
@@ -141,7 +142,7 @@ SectionTP:CreateButton("Sell All(MooseWood)", function()
     local rootPart = character:WaitForChild("HumanoidRootPart")
     savePosition()
     task.wait(0.2)
-    rootPart.CFrame = CFrame.new(384, 134, 232)
+    rootPart.Position = Position.new(466.16, 1551.002, 224.497)
     game:GetService("Workspace").world.npcs["Mar Merchant"].merchant.sellall:InvokeServer()
     task.wait(0.2)
     teleportToSavedPosition()
