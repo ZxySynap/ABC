@@ -105,6 +105,38 @@ SectionTP:CreateDropdown("DropDown", {"Desolate Deep", "Sunstone", "Statue of So
     end
 end)
 
+local savedPosition = nil 
+
+function savePosition()
+    local player = game.Players.LocalPlayer
+    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        savedPosition = player.Character.HumanoidRootPart.Position
+        print("ตำแหน่งถูกบันทึกแล้ว:", savedPosition)
+    end
+end
+
+function teleportToSavedPosition()
+    local player = game.Players.LocalPlayer
+    if savedPosition and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        player.Character.HumanoidRootPart.CFrame = CFrame.new(savedPosition)
+        print("วาร์ปกลับไปที่ตำแหน่ง:", savedPosition)
+    else
+        print("ไม่มีตำแหน่งที่บันทึกไว้!")
+    end
+end
+
+SectionTP:CreateButton("Sell All", function()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local rootPart = character:WaitForChild("HumanoidRootPart")
+    savePosition()
+    task.wait(0.2)
+    rootPart.CFrame = game:GetService("Workspace").world.npcs["Max Merchant"]:FindFirstChild("HumanoidRootPart").CFrame
+    game:GetService("Workspace").world.npcs["Max Merchant"].merchant.sellall:InvokeServer()
+    task.wait(0.2)
+    teleportToSavedPosition()
+end)
+
 task.spawn(function()
     while wait(320) do
         pcall(function()
